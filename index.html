@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Student Grade Tracker — Track your academic performance, record course scores, calculate averages instantly, and stay on top of your academic goals." />
+    <title>GradeTrack — Student Grade Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ─── Toast Container ─── -->
+    <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- ─── Delete Course Modal ─── -->
+    <div id="delete-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title" hidden>
+      <div class="modal-card modal-card--danger">
+        <div class="modal-icon modal-icon--danger">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        </div>
+        <h2 id="delete-modal-title" class="modal-title">Delete this course?</h2>
+        <p class="modal-body">This cannot be undone. The course and its score will be permanently removed.</p>
+        <div class="modal-actions">
+          <button class="btn btn-secondary modal-cancel-btn" type="button">Cancel</button>
+          <button class="btn btn-danger modal-confirm-delete-btn" type="button">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Clear All Courses Modal ─── -->
+    <div id="clear-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="clear-modal-title" hidden>
+      <div class="modal-card modal-card--danger">
+        <div class="modal-icon modal-icon--danger">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <h2 id="clear-modal-title" class="modal-title">Clear all courses?</h2>
+        <p class="modal-body">All <strong id="clear-modal-count">0</strong> courses will be permanently deleted. This cannot be undone.</p>
+        <div class="modal-actions">
+          <button class="btn btn-secondary modal-cancel-btn" type="button">Cancel</button>
+          <button class="btn btn-danger modal-confirm-clear-btn" type="button">Clear all</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Delete Account Modal ─── -->
+    <div id="delete-account-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="delete-account-modal-title" hidden>
+      <div class="modal-card modal-card--danger">
+        <div class="modal-icon modal-icon--danger">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <h2 id="delete-account-modal-title" class="modal-title">Delete your account?</h2>
+        <p class="modal-body">This will permanently delete all your data, including courses and profile information. This cannot be undone.</p>
+        <div class="modal-actions">
+          <button class="btn btn-secondary modal-cancel-btn" type="button">Cancel</button>
+          <button class="btn btn-danger modal-confirm-delete-account-btn" type="button">Delete account</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════ -->
+    <!-- PUBLIC PAGES                                -->
+    <!-- ════════════════════════════════════════════ -->
+    <div id="public-shell">
+
+      <!-- ─── 1. LANDING PAGE ─── -->
+      <section id="page-landing" class="page page--landing">
+        <!-- Nav -->
+        <nav class="landing-nav">
+          <div class="container nav-inner">
+            <div class="brand">
+              <div class="brand-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              </div>
+              <span class="brand-name">GradeTrack</span>
+            </div>
+            <div class="landing-nav-links">
+              <a href="#" class="landing-nav-link" data-page="login">Sign In</a>
+              <a href="#" class="btn btn-primary btn-sm" data-page="register">Get Started</a>
+            </div>
+          </div>
+        </nav>
+
+        <!-- Hero -->
+        <section class="landing-hero">
+          <div class="container landing-hero-inner">
+            <div class="landing-hero-content">
+              <h1 class="landing-hero-title">Track Your Academic Performance with Ease</h1>
+              <p class="landing-hero-subtitle">Record course scores, calculate averages instantly, and stay on top of your academic goals.</p>
+              <div class="landing-hero-actions">
+                <a href="#" class="btn btn-primary btn-lg" data-page="register">Get Started</a>
+                <a href="#" class="btn btn-secondary btn-lg" data-page="login">Sign In</a>
+              </div>
+            </div>
+            <div class="landing-hero-visual" aria-hidden="true">
+              <div class="hero-illustration">
+                <div class="hero-card hero-card--1">
+                  <div class="hero-card-line"></div>
+                  <div class="hero-card-line hero-card-line--short"></div>
+                  <div class="hero-card-score">87%</div>
+                </div>
+                <div class="hero-card hero-card--2">
+                  <div class="hero-card-line"></div>
+                  <div class="hero-card-line hero-card-line--short"></div>
+                  <div class="hero-card-score">92%</div>
+                </div>
+                <div class="hero-card hero-card--3">
+                  <div class="hero-card-line"></div>
+                  <div class="hero-card-line hero-card-line--short"></div>
+                  <div class="hero-card-score">74%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Benefits -->
+        <section class="landing-benefits">
+          <div class="container">
+            <h2 class="landing-benefits-title">Everything you need to track your grades</h2>
+            <div class="benefits-grid">
+              <div class="benefit-card">
+                <div class="benefit-icon benefit-icon--blue">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                </div>
+                <h3 class="benefit-card-title">Add Courses Easily</h3>
+                <p class="benefit-card-body">Quickly save all your courses and scores in one place. Organised and always accessible.</p>
+              </div>
+              <div class="benefit-card">
+                <div class="benefit-icon benefit-icon--green">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                </div>
+                <h3 class="benefit-card-title">Automatic Averages</h3>
+                <p class="benefit-card-body">Instantly calculate your performance. No manual math — just clear, real-time insights.</p>
+              </div>
+              <div class="benefit-card">
+                <div class="benefit-icon benefit-icon--amber">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </div>
+                <h3 class="benefit-card-title">Access Anywhere</h3>
+                <p class="benefit-card-body">View your records on any device — desktop, tablet, or mobile. Your data goes wherever you do.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="landing-footer">
+          <div class="container landing-footer-inner">
+            <div class="landing-footer-links">
+              <a href="#" class="landing-footer-link" data-page="about">About</a>
+              <a href="#" class="landing-footer-link" data-page="privacy">Privacy Policy</a>
+              <a href="#" class="landing-footer-link" data-page="contact">Contact</a>
+            </div>
+            <p class="landing-footer-copy">&copy; 2025 GradeTrack. All rights reserved.</p>
+          </div>
+        </footer>
+      </section>
+
+      <!-- ─── 2. LOGIN PAGE ─── -->
+      <section id="page-login" class="page page--auth" hidden>
+        <div class="auth-layout">
+          <div class="auth-visual" aria-hidden="true">
+            <div class="auth-visual-content">
+              <div class="auth-visual-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              </div>
+              <h2 class="auth-visual-title">Welcome Back</h2>
+              <p class="auth-visual-body">Sign in to continue tracking your academic performance.</p>
+            </div>
+          </div>
+          <div class="auth-form-wrapper">
+            <div class="auth-form-container">
+              <a href="#" class="auth-back" data-page="landing">&larr; Back to home</a>
+              <h1 class="auth-title">Sign In</h1>
+              <p class="auth-subtitle">Welcome back! Please enter your credentials.</p>
+              <form id="login-form" class="auth-form" novalidate autocomplete="off">
+                <div class="form-group">
+                  <label class="form-label" for="login-email">Email Address</label>
+                  <div class="input-wrapper">
+                    <span class="input-icon" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </span>
+                    <input id="login-email" class="form-input form-input--with-icon" type="email" name="email" placeholder="you@example.com" autocomplete="email" required />
+                  </div>
+                  <span id="login-email-error" class="form-error" role="alert" hidden></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="login-password">Password</label>
+                  <div class="input-wrapper">
+                    <span class="input-icon" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </span>
+                    <input id="login-password" class="form-input form-input--with-icon" type="password" name="password" placeholder="Enter your password" autocomplete="current-password" required />
+                  </div>
+                  <span id="login-password-error" class="form-error" role="alert" hidden></span>
+                </div>
+                <div class="form-row-options">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="remember-me" />
+                    <span>Remember me</span>
+                  </label>
+                  <a href="#" class="form-link" data-page="forgot">Forgot password?</a>
+                </div>
+                <button id="login-submit-btn" class="btn btn-primary btn-full" type="submit">Sign In</button>
+              </form>
+              <p class="auth-switch">Don't have an account? <a href="#" data-page="register">Create one</a></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── 3. REGISTER PAGE ─── -->
+      <section id="page-register" class="page page--auth" hidden>
+        <div class="auth-layout">
+          <div class="auth-visual" aria-hidden="true">
+            <div class="auth-visual-content">
+              <div class="auth-visual-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <h2 class="auth-visual-title">Join GradeTrack</h2>
+              <p class="auth-visual-body">Create your account and start tracking your grades today.</p>
+            </div>
+          </div>
+          <div class="auth-form-wrapper">
+            <div class="auth-form-container">
+              <a href="#" class="auth-back" data-page="landing">&larr; Back to home</a>
+              <h1 class="auth-title">Create Account</h1>
+              <p class="auth-subtitle">Fill in the details below to get started.</p>
+              <form id="register-form" class="auth-form" novalidate autocomplete="off">
+                <div class="form-group">
+                  <label class="form-label" for="reg-name">Full Name</label>
+                  <div class="input-wrapper">
+                    <span class="input-icon" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </span>
+                    <input id="reg-name" class="form-input form-input--with-icon" type="text" name="name" placeholder="John Doe" autocomplete="name" required />
+                  </div>
+                  <span id="reg-name-error" class="form-error" role="alert" hidden></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="reg-email">Email Address</label>
+                  <div class="input-wrapper">
+                    <span class="input-icon" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </span>
+                    <input id="reg-email" class="form-input form-input--with-icon" type="email" name="email" placeholder="you@example.com" autocomplete="email" required />
+                  </div>
+                  <span id="reg-email-error" class="form-error" role="alert" hidden></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="reg-password">Password</label>
+                  <div class="input-wrapper">
+                    <span class="input-icon" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </span>
+                    <input id="reg-password" class="form-input form-input--with-icon" type="password" name="password" placeholder="Min. 6 characters" autocomplete="new-password" minlength="6" required />
+                  </div>
+                  <span id="reg-password-error" class="form-error" role="alert" hidden></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="reg-confirm">Confirm Password</label>
+                  <div class="input-wrapper">
+                    <span class="input-icon" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </span>
+                    <input id="reg-confirm" class="form-input form-input--with-icon" type="password" name="confirm" placeholder="Re-enter password" autocomplete="new-password" required />
+                  </div>
+                  <span id="reg-confirm-error" class="form-error" role="alert" hidden></span>
+                </div>
+                <button id="register-submit-btn" class="btn btn-primary btn-full" type="submit">Create Account</button>
+              </form>
+              <p class="auth-switch">Already have an account? <a href="#" data-page="login">Sign In</a></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── 4. FORGOT PASSWORD PAGE ─── -->
+      <section id="page-forgot" class="page page--auth page--auth-single" hidden>
+        <div class="auth-single-container">
+          <a href="#" class="auth-back" data-page="login">&larr; Back to sign in</a>
+          <div class="auth-single-card">
+            <div class="auth-single-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <h1 class="auth-title">Forgot Password</h1>
+            <p class="auth-subtitle">Enter your email address and we'll send you a reset link.</p>
+            <form id="forgot-form" class="auth-form" novalidate autocomplete="off">
+              <div class="form-group">
+                <label class="form-label" for="forgot-email">Email Address</label>
+                <div class="input-wrapper">
+                  <span class="input-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  </span>
+                  <input id="forgot-email" class="form-input form-input--with-icon" type="email" name="email" placeholder="you@example.com" autocomplete="email" required />
+                </div>
+                <span id="forgot-email-error" class="form-error" role="alert" hidden></span>
+              </div>
+              <button id="forgot-submit-btn" class="btn btn-primary btn-full" type="submit">Send Reset Link</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ════════════════════════════════════════════ -->
+    <!-- PROTECTED APP SHELL                        -->
+    <!-- ════════════════════════════════════════════ -->
+    <div id="app-shell" class="app-shell" hidden>
+      <!-- ─── Sidebar ─── -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <div class="brand">
+            <div class="brand-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            </div>
+            <span class="brand-name">GradeTrack</span>
+          </div>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="#" class="sidebar-link sidebar-link--active" data-page="dashboard">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="sidebar-link" data-page="courses">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <span>Courses</span>
+          </a>
+          <a href="#" class="sidebar-link" data-page="profile">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Profile</span>
+          </a>
+          <a href="#" class="sidebar-link" data-page="settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span>Settings</span>
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <button id="sidebar-logout-btn" class="sidebar-logout-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span>Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- ─── Main Content Area ─── -->
+      <div class="app-main">
+        <!-- Topbar -->
+        <header class="topbar">
+          <div class="topbar-inner">
+            <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+            <div class="topbar-title-area">
+              <h2 id="page-title" class="topbar-title">Dashboard</h2>
+            </div>
+            <div class="topbar-right">
+              <span id="topbar-user-name" class="topbar-user-name"></span>
+              <div class="topbar-avatar" id="topbar-avatar">
+                <span id="topbar-avatar-initials">JD</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="app-content">
+          <!-- ─── DASHBOARD PAGE ─── -->
+          <section id="page-dashboard" class="page page--protected">
+            <div class="page-content-inner">
+              <!-- Stats -->
+              <div class="stats-section">
+                <div class="stat-card stat-card--average" id="average-card">
+                  <div class="stat-card__label">Overall Average</div>
+                  <div class="stat-card__number" id="average-value">—</div>
+                  <div class="stat-card__badge" id="average-badge" hidden></div>
+                  <div class="stat-card__hint">Average updates automatically.</div>
+                </div>
+                <div class="stats-grid">
+                  <div class="stat-card stat-card--sm" aria-label="Total courses">
+                    <div class="stat-card__icon stat-card__icon--blue" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    </div>
+                    <div class="stat-card__number stat-card__number--sm" id="total-courses">0</div>
+                    <div class="stat-card__label">Courses</div>
+                  </div>
+                  <div class="stat-card stat-card--sm" aria-label="Highest score">
+                    <div class="stat-card__icon stat-card__icon--green" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                    </div>
+                    <div class="stat-card__number stat-card__number--sm" id="highest-score">—</div>
+                    <div class="stat-card__label">Highest</div>
+                  </div>
+                  <div class="stat-card stat-card--sm" aria-label="Lowest score">
+                    <div class="stat-card__icon stat-card__icon--amber" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+                    </div>
+                    <div class="stat-card__number stat-card__number--sm" id="lowest-score">—</div>
+                    <div class="stat-card__label">Lowest</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Add + Recent -->
+              <div class="dashboard-grid">
+                <div class="dashboard-card">
+                  <h3 class="dashboard-card-title">Quick Add Course</h3>
+                  <form id="dashboard-quick-form" class="dashboard-quick-form" novalidate autocomplete="off">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <input id="dash-course-name" class="form-input" type="text" name="courseName" placeholder="Course name" maxlength="80" required />
+                      </div>
+                      <div class="form-group form-group--score">
+                        <input id="dash-course-score" class="form-input" type="number" name="score" placeholder="Score" min="0" max="100" step="0.1" required />
+                      </div>
+                    </div>
+                    <div class="form-actions">
+                      <button class="btn btn-primary" type="submit">Add Course</button>
+                    </div>
+                  </form>
+                </div>
+                <div class="dashboard-card">
+                  <h3 class="dashboard-card-title">Recent Courses</h3>
+                  <div id="dashboard-recent-list">
+                    <p class="text-muted" id="dashboard-recent-empty">No courses added yet.</p>
+                    <div id="dashboard-recent-items" hidden></div>
+                  </div>
+                  <a href="#" class="dashboard-card-link" data-page="courses">View all courses &rarr;</a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ─── COURSES PAGE ─── -->
+          <section id="page-courses" class="page page--protected" hidden>
+            <div class="page-content-inner">
+              <!-- Add / Edit Course Form -->
+              <div class="form-card">
+                <h2 class="form-title">
+                  <span id="course-form-mode-icon" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                  </span>
+                  <span id="course-form-mode-label">Add a Course</span>
+                </h2>
+                <form id="course-form" novalidate autocomplete="off">
+                  <div class="form-row">
+                    <div class="form-group" id="course-name-group">
+                      <label class="form-label" for="course-name-input">Course name</label>
+                      <div class="input-wrapper">
+                        <span class="input-icon" aria-hidden="true">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                        </span>
+                        <input id="course-name-input" class="form-input" type="text" name="courseName" placeholder="e.g. CSC 301" maxlength="80" aria-describedby="course-name-error" required />
+                      </div>
+                      <span id="course-name-error" class="form-error" role="alert" hidden></span>
+                    </div>
+                    <div class="form-group form-group--score" id="course-score-group">
+                      <label class="form-label" for="course-score-input">Score (%)</label>
+                      <div class="input-wrapper">
+                        <span class="input-icon" aria-hidden="true">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+                        </span>
+                        <input id="course-score-input" class="form-input" type="number" name="score" placeholder="e.g. 78" min="0" max="100" step="0.1" aria-describedby="course-score-error" required />
+                        <span class="input-suffix">%</span>
+                      </div>
+                      <span id="course-score-error" class="form-error" role="alert" hidden></span>
+                    </div>
+                  </div>
+                  <div class="form-actions">
+                    <button id="course-submit-btn" class="btn btn-primary" type="submit">
+                      <span class="btn-icon" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                      </span>
+                      <span id="course-submit-btn-label">Add course</span>
+                    </button>
+                    <button id="course-cancel-edit-btn" class="btn btn-secondary" type="button" hidden>Cancel</button>
+                    <button id="course-clear-all-btn" class="btn btn-ghost-danger" type="button">
+                      <span class="btn-icon" aria-hidden="true">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                      </span>
+                      Clear all
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Course List -->
+              <div class="list-section">
+                <div class="list-header">
+                  <h2 class="list-title">Your Courses</h2>
+                  <div class="list-controls">
+                    <div class="search-wrapper" id="courses-search-wrapper" hidden>
+                      <span class="search-icon" aria-hidden="true">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                      </span>
+                      <input id="courses-search-input" class="search-input" type="search" placeholder="Search courses…" aria-label="Search courses" />
+                    </div>
+                    <div class="sort-wrapper" id="courses-sort-wrapper" hidden>
+                      <select id="courses-sort-select" class="sort-select" aria-label="Sort courses">
+                        <option value="date-desc">Latest first</option>
+                        <option value="date-asc">Oldest first</option>
+                        <option value="score-desc">Highest score</option>
+                        <option value="score-asc">Lowest score</option>
+                        <option value="name-asc">A &rarr; Z</option>
+                        <option value="name-desc">Z &rarr; A</option>
+                      </select>
+                    </div>
+                    <button id="courses-export-btn" class="btn btn-sm btn-secondary" type="button" hidden aria-label="Export courses as CSV">
+                      <span class="btn-icon" aria-hidden="true">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                      </span>
+                      Export CSV
+                    </button>
+                  </div>
+                </div>
+
+                <div id="courses-list-wrapper" hidden>
+                  <div class="table-wrapper" role="region" aria-label="Course list" tabindex="0">
+                    <table class="course-table" aria-label="Courses">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Course Name</th>
+                          <th scope="col">Score</th>
+                          <th scope="col">Grade</th>
+                          <th scope="col" class="col-actions">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="course-tbody"></tbody>
+                    </table>
+                  </div>
+                  <p class="list-hint">You can edit or remove any course at any time.</p>
+                </div>
+
+                <div id="courses-empty-state" class="empty-state">
+                  <div class="empty-state__illustration" aria-hidden="true">
+                    <svg width="72" height="72" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="80" height="80" rx="20" fill="#EFF6FF"/>
+                      <rect x="18" y="22" width="44" height="36" rx="4" fill="#BFDBFE"/>
+                      <rect x="24" y="30" width="32" height="3" rx="1.5" fill="#2563EB"/>
+                      <rect x="24" y="37" width="22" height="3" rx="1.5" fill="#93C5FD"/>
+                      <rect x="24" y="44" width="28" height="3" rx="1.5" fill="#93C5FD"/>
+                      <circle cx="57" cy="53" r="12" fill="#2563EB"/>
+                      <line x1="57" y1="48" x2="57" y2="58" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                      <line x1="52" y1="53" x2="62" y2="53" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <h3 class="empty-state__title">No courses yet</h3>
+                  <p class="empty-state__body">Add your first course above to calculate your average.</p>
+                </div>
+                <div id="courses-no-results" class="empty-state" hidden>
+                  <div class="empty-state__illustration" aria-hidden="true">
+                    <svg width="72" height="72" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="80" height="80" rx="20" fill="#F1F5F9"/>
+                      <circle cx="36" cy="36" r="16" stroke="#94A3B8" stroke-width="3" fill="none"/>
+                      <line x1="47" y1="47" x2="58" y2="58" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+                      <line x1="30" y1="36" x2="42" y2="36" stroke="#CBD5E1" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <h3 class="empty-state__title">No matching courses</h3>
+                  <p class="empty-state__body">Try a different search term.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ─── PROFILE PAGE ─── -->
+          <section id="page-profile" class="page page--protected" hidden>
+            <div class="page-content-inner">
+              <div class="profile-header">
+                <div class="profile-avatar" id="profile-avatar-display">
+                  <span id="profile-avatar-initials">JD</span>
+                </div>
+                <div>
+                  <h2 class="profile-name" id="profile-name-display">John Doe</h2>
+                  <p class="profile-email" id="profile-email-display">john@example.com</p>
+                </div>
+              </div>
+
+              <div class="profile-card">
+                <h3 class="profile-card-title">Personal Information</h3>
+                <form id="profile-form" novalidate autocomplete="off">
+                  <div class="profile-form-grid">
+                    <div class="form-group">
+                      <label class="form-label" for="profile-name">Full Name</label>
+                      <input id="profile-name" class="form-input" type="text" name="name" required />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="profile-email">Email</label>
+                      <input id="profile-email" class="form-input" type="email" name="email" required />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="profile-institution">Institution</label>
+                      <input id="profile-institution" class="form-input" type="text" name="institution" placeholder="e.g. University of Lagos" />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="profile-faculty">Faculty</label>
+                      <input id="profile-faculty" class="form-input" type="text" name="faculty" placeholder="e.g. Engineering" />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="profile-department">Department</label>
+                      <input id="profile-department" class="form-input" type="text" name="department" placeholder="e.g. Computer Science" />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="profile-level">Level</label>
+                      <select id="profile-level" class="form-input form-select" name="level">
+                        <option value="">Select level</option>
+                        <option value="100">100 Level</option>
+                        <option value="200">200 Level</option>
+                        <option value="300">300 Level</option>
+                        <option value="400">400 Level</option>
+                        <option value="500">500 Level</option>
+                        <option value="600">600 Level</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-actions">
+                    <button id="profile-save-btn" class="btn btn-primary" type="submit">Save Changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </section>
+
+          <!-- ─── SETTINGS PAGE ─── -->
+          <section id="page-settings" class="page page--protected" hidden>
+            <div class="page-content-inner">
+              <div class="settings-card">
+                <h3 class="settings-card-title">Change Password</h3>
+                <form id="settings-password-form" novalidate autocomplete="off">
+                  <div class="form-group">
+                    <label class="form-label" for="settings-current-password">Current Password</label>
+                    <input id="settings-current-password" class="form-input" type="password" name="currentPassword" autocomplete="current-password" required />
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label" for="settings-new-password">New Password</label>
+                      <input id="settings-new-password" class="form-input" type="password" name="newPassword" placeholder="Min. 6 characters" minlength="6" autocomplete="new-password" required />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="settings-confirm-password">Confirm New Password</label>
+                      <input id="settings-confirm-password" class="form-input" type="password" name="confirmPassword" placeholder="Re-enter new password" autocomplete="new-password" required />
+                    </div>
+                  </div>
+                  <span id="settings-password-error" class="form-error" role="alert" hidden></span>
+                  <div class="form-actions">
+                    <button id="settings-password-btn" class="btn btn-primary" type="submit">Update Password</button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="settings-card settings-card--danger">
+                <h3 class="settings-card-title">Danger Zone</h3>
+                <p class="settings-card-body">Permanently delete your account and all associated data. This action cannot be undone.</p>
+                <button id="settings-delete-account-btn" class="btn btn-danger">Delete Account</button>
+              </div>
+
+              <div class="settings-card">
+                <button id="settings-logout-btn" class="btn btn-secondary">Logout</button>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -305,6 +305,9 @@
       </section>
     </div>
 
+    <!-- Sidebar backdrop (mobile) -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop" hidden></div>
+
     <!-- ════════════════════════════════════════════ -->
     <!-- PROTECTED APP SHELL                        -->
     <!-- ════════════════════════════════════════════ -->
@@ -412,7 +415,7 @@
                       <div class="form-group">
                         <input id="dash-course-name" class="form-input" type="text" name="courseName" placeholder="Course name" maxlength="80" required />
                       </div>
-                      <div class="form-group form-group--score">
+                      <div class="form-group">
                         <input id="dash-course-score" class="form-input" type="number" name="score" placeholder="Score" min="0" max="100" step="0.1" required />
                       </div>
                     </div>
@@ -452,7 +455,7 @@
                         <span class="input-icon" aria-hidden="true">
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                         </span>
-                        <input id="course-name-input" class="form-input" type="text" name="courseName" placeholder="e.g. CSC 301" maxlength="80" aria-describedby="course-name-error" required />
+                        <input id="course-name-input" class="form-input form-input--with-icon" type="text" name="courseName" placeholder="e.g. CSC 301" maxlength="80" aria-describedby="course-name-error" required />
                       </div>
                       <span id="course-name-error" class="form-error" role="alert" hidden></span>
                     </div>
@@ -462,7 +465,7 @@
                         <span class="input-icon" aria-hidden="true">
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
                         </span>
-                        <input id="course-score-input" class="form-input" type="number" name="score" placeholder="e.g. 78" min="0" max="100" step="0.1" aria-describedby="course-score-error" required />
+                        <input id="course-score-input" class="form-input form-input--with-icon" type="number" name="score" placeholder="e.g. 78" min="0" max="100" step="0.1" aria-describedby="course-score-error" required />
                         <span class="input-suffix">%</span>
                       </div>
                       <span id="course-score-error" class="form-error" role="alert" hidden></span>

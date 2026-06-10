@@ -129,13 +129,13 @@ function openModal(modal) {
   if (!modal) return;
   modal.hidden = false;
   modal.focus();
-  document.body.style.overflow = "hidden";
+  document.body.classList.add("modal-open");
 }
 
 function closeModal(modal) {
   if (!modal) return;
   modal.hidden = true;
-  document.body.style.overflow = "";
+  document.body.classList.remove("modal-open");
 }
 
 // ════════════════════════════════════════════
@@ -261,7 +261,9 @@ function navigate(page) {
 
   // Close mobile sidebar
   const sidebar = $("sidebar");
+  const sidebarBackdrop = $("sidebar-backdrop");
   if (sidebar) { sidebar.classList.remove("sidebar--open"); sidebarOpen = false; }
+  if (sidebarBackdrop) sidebarBackdrop.hidden = true;
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -961,10 +963,20 @@ function wireEvents() {
   // ── Sidebar toggle ──
   const sidebarToggle = $("sidebar-toggle");
   const sidebar = $("sidebar");
+  const sidebarBackdrop = $("sidebar-backdrop");
   if (sidebarToggle && sidebar) {
     sidebarToggle.addEventListener("click", () => {
       sidebarOpen = !sidebarOpen;
       sidebar.classList.toggle("sidebar--open", sidebarOpen);
+      if (sidebarBackdrop) sidebarBackdrop.hidden = !sidebarOpen;
+    });
+  }
+  // Close sidebar on backdrop click
+  if (sidebarBackdrop) {
+    sidebarBackdrop.addEventListener("click", () => {
+      sidebarOpen = false;
+      sidebar.classList.remove("sidebar--open");
+      sidebarBackdrop.hidden = true;
     });
   }
 

@@ -9,7 +9,7 @@
 const USERS_KEY = "sgt_users_v1";
 const SESSION_KEY = "sgt_session_v1";
 const COURSES_KEY = "sgt_courses_v1";
-const TOAST_DURATION = 3000;
+const TOAST_DURATION = 3500;
 
 const GRADE_SCALE = [
   { min: 70, label: "Excellent", badge: "A", cls: "excellent" },
@@ -110,18 +110,40 @@ const TOAST_ICONS = {
   warning: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
 };
 
+const TOAST_LABELS = { success: "Success", error: "Error", warning: "Warning", info: "Info" };
+
 function showToast(message, type = "info") {
   const container = $("toast-container");
   if (!container) return;
   const toast = document.createElement("div");
   toast.className = `toast toast--${type}`;
-  toast.setAttribute("role", "status");
-  toast.innerHTML = `<span class="toast__icon">${TOAST_ICONS[type] || TOAST_ICONS.info}</span><span class="toast__msg">${escapeHtml(message)}</span>`;
+  toast.setAttribute("role", "alert");
+  toast.innerHTML = `
+    <div class="toast__body">
+      <span class="toast__icon">${TOAST_ICONS[type] || TOAST_ICONS.info}</span>
+      <div class="toast__content">
+        <span class="toast__label">${TOAST_LABELS[type] || "Info"}</span>
+        <span class="toast__msg">${escapeHtml(message)}</span>
+      </div>
+      <button class="toast__close" aria-label="Dismiss">&times;</button>
+    </div>
+    <span class="toast__progress"></span>
+  `;
+  toast.style.setProperty("--toast-duration", `${TOAST_DURATION}ms`);
   container.appendChild(toast);
-  setTimeout(() => {
-    toast.classList.add("toast-out");
-    toast.addEventListener("transitionend", () => toast.remove(), { once: true });
-  }, TOAST_DURATION);
+
+  const closeBtn = toast.querySelector(".toast__close");
+  closeBtn.addEventListener("click", () => dismissToast(toast));
+
+  toast._timer = setTimeout(() => dismissToast(toast), TOAST_DURATION);
+}
+
+function dismissToast(toast) {
+  if (toast._dismissed) return;
+  toast._dismissed = true;
+  clearTimeout(toast._timer);
+  toast.classList.add("toast-out");
+  toast.addEventListener("transitionend", () => toast.remove(), { once: true });
 }
 
 // ─── Modals ──────────────────────────────────

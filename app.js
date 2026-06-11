@@ -897,7 +897,7 @@ function wireEvents() {
   }
 
   // ── Logout ──
-  const logoutBtns = [$("sidebar-logout-btn"), $("settings-logout-btn")];
+  const logoutBtns = [$("sidebar-logout-btn")];
   logoutBtns.forEach(btn => {
     if (btn) btn.addEventListener("click", endSession);
   });

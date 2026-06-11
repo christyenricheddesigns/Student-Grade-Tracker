@@ -9,7 +9,7 @@
 const USERS_KEY = "sgt_users_v1";
 const SESSION_KEY = "sgt_session_v1";
 const COURSES_KEY = "sgt_courses_v1";
-const TOAST_DURATION = 3500;
+const TOAST_DURATION = 5000;
 
 const GRADE_SCALE = [
   { min: 70, label: "Excellent", badge: "A", cls: "excellent" },
@@ -648,23 +648,6 @@ function confirmDelete() {
   showToast(course ? `"${course.courseName}" deleted.` : "Course deleted.", "info");
 }
 
-function requestClearAll() {
-  if (courses.length === 0) return;
-  const countEl = $("clear-modal-count");
-  if (countEl) countEl.textContent = courses.length;
-  openModal($("clear-modal"));
-}
-
-function confirmClearAll() {
-  courses = [];
-  if (editingId) exitCourseEditMode();
-  saveCourses();
-  renderCourses();
-  renderDashboard();
-  closeModal($("clear-modal"));
-  showToast("All courses cleared.", "info");
-}
-
 function exportCSV() {
   if (courses.length === 0) return;
   const stats = calcStats();
@@ -909,9 +892,6 @@ function wireEvents() {
   const cancelEditBtn = $("course-cancel-edit-btn");
   if (cancelEditBtn) cancelEditBtn.addEventListener("click", exitCourseEditMode);
 
-  const clearAllBtn = $("course-clear-all-btn");
-  if (clearAllBtn) clearAllBtn.addEventListener("click", requestClearAll);
-
   // ── Course table actions (delegation) ──
   const courseTbody = $("course-tbody");
   if (courseTbody) {
@@ -942,19 +922,16 @@ function wireEvents() {
   document.querySelectorAll(".modal-cancel-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       closeModal($("delete-modal"));
-      closeModal($("clear-modal"));
       closeModal($("delete-account-modal"));
     });
   });
   const confirmDeleteBtn = document.querySelector(".modal-confirm-delete-btn");
   if (confirmDeleteBtn) confirmDeleteBtn.addEventListener("click", confirmDelete);
-  const confirmClearBtn = document.querySelector(".modal-confirm-clear-btn");
-  if (confirmClearBtn) confirmClearBtn.addEventListener("click", confirmClearAll);
   const confirmDeleteAccountBtn = document.querySelector(".modal-confirm-delete-account-btn");
   if (confirmDeleteAccountBtn) confirmDeleteAccountBtn.addEventListener("click", confirmDeleteAccount);
 
   // Close modals on backdrop click
-  ["delete-modal", "clear-modal", "delete-account-modal"].forEach(id => {
+  ["delete-modal", "delete-account-modal"].forEach(id => {
     const modal = $(id);
     if (modal) {
       modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(modal); });
@@ -964,7 +941,7 @@ function wireEvents() {
   // Close modals on Escape
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
-      ["delete-modal", "clear-modal", "delete-account-modal"].forEach(id => {
+  ["delete-modal", "delete-account-modal"].forEach(id => {
         const m = $(id); if (m && !m.hidden) closeModal(m);
       });
     }
